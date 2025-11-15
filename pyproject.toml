@@ -49,7 +49,6 @@ dev = [
 
 [tool.deptry]
 known_first_party = ["lessons_learnt"]
-per_rule_ignores = {"DEP003" = ["pydantic_core"]}
 
 [tool.ruff]
 cache-dir = ".quality/ruff/cache"
