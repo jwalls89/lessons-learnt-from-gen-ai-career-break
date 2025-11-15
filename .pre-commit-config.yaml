@@ -29,12 +29,13 @@ repos:
     -   id: python-no-eval
     -   id: python-no-log-warn
     -   id: python-use-type-annotations
--   repo: https://github.com/python-poetry/poetry
-    rev: 2.2.1
-    hooks:
-    -   id: poetry-check
-        args: [--strict]
-    -   id: poetry-lock
+#     Issues with poetry v2.2.1 checks running in GitHub Actions
+# -   repo: https://github.com/python-poetry/poetry
+#     rev: 2.2.1
+#     hooks:
+#     -   id: poetry-check
+#         args: [--strict]
+#     -   id: poetry-lock
 -   repo: https://github.com/gitleaks/gitleaks
     rev: v8.29.0
     hooks:
