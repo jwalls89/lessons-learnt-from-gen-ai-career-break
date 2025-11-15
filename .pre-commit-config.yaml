@@ -1,0 +1,51 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+    -   id: check-added-large-files
+    -   id: check-ast
+    -   id: check-builtin-literals
+    -   id: check-case-conflict
+    -   id: check-docstring-first
+    -   id: check-json
+    -   id: check-merge-conflict
+    -   id: check-toml
+    -   id: check-xml
+    -   id: check-yaml
+    -   id: debug-statements
+    -   id: detect-aws-credentials
+        args: ['--allow-missing-credentials']
+    -   id: detect-private-key
+    -   id: end-of-file-fixer
+    -   id: forbid-submodules
+    -   id: pretty-format-json
+        exclude: 'package.json|package-lock.json|cdk.json'
+    -   id: no-commit-to-branch
+        args: ['--branch', 'main', '--branch', 'master']
+-   repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+    -   id: python-check-blanket-type-ignore
+    -   id: python-check-mock-methods
+    -   id: python-no-eval
+    -   id: python-no-log-warn
+    -   id: python-use-type-annotations
+# -   repo: https://github.com/python-poetry/poetry
+#     rev: 2.2.1
+#     hooks:
+#     -   id: poetry-check
+#         args: [--strict]
+#     -   id: poetry-lock
+-   repo: https://github.com/gitleaks/gitleaks
+    rev: v8.29.0
+    hooks:
+      - id: gitleaks
+# -   repo: https://github.com/rhysd/actionlint
+#     rev: v1.7.8
+#     hooks:
+#       - id: actionlint
+# -   repo: https://github.com/commitizen-tools/commitizen
+#     rev: v1.17.0
+#     hooks:
+#       - id: commitizen
+#         stages: [commit-msg]
