@@ -1,0 +1,36 @@
+name: CI on Push to Main
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Run CI Steps
+        uses: ./.github/actions/ci-steps
+
+  test-multi-python:
+    name: Test Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # 2025-10-14: Commented out 3.14 - Waiting for github to update their 3.14 build to a later version without union type issue
+        python-version: ["3.13"]
+        # python-version: ["3.13", "3.14"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Run multi-Python tests
+        uses: ./.github/actions/multi-python-tests
+        with:
+          python-version: ${{ matrix.python-version }}

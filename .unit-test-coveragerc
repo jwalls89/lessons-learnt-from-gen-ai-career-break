@@ -1,0 +1,7 @@
+[report]
+fail_under = 80
+sort = cover
+
+[run]
+branch = True
+data_file = ./.quality/pytest-cov/.unit-test-coverage

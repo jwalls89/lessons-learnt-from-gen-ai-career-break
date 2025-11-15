@@ -1,0 +1,199 @@
+[project]
+name = "lessons-learnt-from-gen-ai-career-break"
+description = "Lessons learned from a career break focused on generative AI"
+authors = [
+    {name = "Julian Walls", email = "j_walls@hotmail.co.uk"}
+]
+readme = "README.md"
+requires-python = ">=3.13,<4.0"
+dependencies = [
+    "invoke (>=2.2.1,<3.0.0)",
+]
+dynamic = ["version"]
+
+[tool.poetry]
+package-mode = true
+requires-poetry = ">=2.0"
+
+packages = [
+    { include = "lessons_learnt", from="src" }
+]
+version = "0.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.requires-plugins]
+poetry-plugin-export = ">=1.6.0,<2.0.0"
+
+[dependency-groups]
+dev = [
+    "mypy (>=1.18.2,<2.0.0)",
+    "pre-commit (>=4.3.0,<5.0.0)",
+    "ruff (>=0.14.0,<0.15.0)",
+    "xenon (>=0.9.3,<0.10.0)",
+    "vulture (>=2.14,<3.0)",
+    "deptry (>=0.23.1,<0.24.0)",
+    "pytest-socket (>=0.7.0,<0.8.0)",
+    "pytest-cov (>=7.0.0,<8.0.0)",
+    "pip-audit (>=2.9.0,<3.0.0)",
+    "pyfakefs (>=5.10.0,<6.0.0)",
+    "pytest-mock (>=3.15.1,<4.0.0)",
+    "polyfactory (>=2.22.2,<3.0.0)",
+    "tox (>=4.31.0,<5.0.0)",
+    "freezegun (>=1.5.5,<2.0.0)",
+    "pytest-order (>=1.3.0,<2.0.0)",
+    "pytest-unordered (>=0.7.0,<0.8.0)",
+]
+
+[tool.deptry]
+known_first_party = ["lessons_learnt"]
+
+[tool.ruff]
+cache-dir = ".quality/ruff/cache"
+exclude = [
+    ".aws-sam",
+    ".codebuild",
+    ".github",
+    ".ini",
+    ".inspector",
+    ".md",
+    ".mypy_cache",
+    ".pdoc",
+    ".pytest",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".trivy",
+    "dist",
+    "docs",
+    "infrastructure",
+    ".txt",
+    ".yaml",
+    "test_data",
+    "vulture_whitelist",
+    "mock_detector.py",
+]
+line-length = 120
+indent-width = 4
+
+fix = true
+target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+    "A",        # flake8-builtins
+    "AIR",      # airflow
+    "ANN",      # flake8-annotations
+    "ARG",      # flake8-unused-arguments
+    "ASYNC",    # flake8-async
+    "ASYNC1",   # flake-trio
+    "B",        # flake8-bugbear
+    "BLE",      # flake8-blind-except
+    "COM",      # flake8-commas
+    "C4",       # flake8-comprehensions
+    "C90",      # mccabe
+    "D",        # pydocstyle
+    "DJ",       # flake-django
+    "DTZ",      # flake8-datetimez
+    "E",        # pycodestyle error
+    "EM",       # flake8-errmsg
+    "ERA",      # eradicate
+    "EXE",      # flake8-executable
+    "F",        # pyflakes
+    "FA",       # flake8-future-annotations
+    "FBT",      # flake8-boolean-trap
+    #"FIX",      # flake8-readme
+    "FLY",      # flynt
+    "FURB",     # refurb
+    "G",        # flake8-logging-format
+    "I",        # isort
+    "ICN",      # flake8-import-conventions
+    "INP",      # flake8-no-pep420
+    "INT",      # flake8-gettext
+    "ISC",      # flake8-implicit-str-concat
+    "LOG",      # flake8-logging
+    "N",        # pep8-naming
+    "NPY",      # NumPy-specific rules
+    "PD",       # pandas-vet
+    "PERF",     # Perflint
+    "PGH",      # pygrep-hooks
+    "PIE",      # flake8-pie
+    "PL",       # pylint
+    "PT",       # flake8-pytest-style
+    "PTH",      # flake8-use-pathlib
+    "PYI",      # flake8-pyi
+    "Q",        # flake8-quotes
+    "RET",      # flake8-return
+    "RSE",      # flake8-raise
+    "RUF",      # Ruff-specific rules
+    "S",        # flake8-bandit
+    "SIM",      # flake8-simplify
+    "SLF",      # flake8-self
+    "SLOT",     # flake8-slots
+    "TC",       # flake8-type-checking
+    #"TD",       # flake8-todos
+    "TID",      # flake8-tidy-imports
+    "TRY",      # tryceratops
+    "T10",      # flake8-debugger,
+    "T20",      # flake8-print
+    "UP",       # pyupgrade
+    "W",        # pycodestyle warning
+    "YTT",      # flake8-2020
+]
+ignore = [
+    "COM812", # recommended removal by ruff when using ruff formatter
+    "ISC001", # recommended removal by ruff when using ruff formatter
+    "G004",   # personal choice to not use
+    "TRY300", # personal choice to not use
+    "D203",   # Use D211 (no blank line before class) - PEP 257 convention
+    "D213",   # Use D212 (summary on first line) - PEP 257 convention
+]
+extend-safe-fixes = ["ANN201","ANN202","ANN204","E712","EM101","EM102","PLC0414","PT006", "TC001", "TC003"]
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?)|fs)$"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**.py" = ["D", "S101", "PLR2004", "FBT001"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
+
+[tool.vulture]
+exclude = [".quality",".poetry"]
+ignore_decorators = [
+    # pydantic
+    "@model_validator",
+    "@field_serializer",
+    "@field_validator",
+    # pytest
+    "@pytest.fixture"
+]
+ignore_names = [
+    # ast
+    "visit_*",
+    # pydantic
+    "model_post_init",
+    "model_config",
+    # unittest
+    "side_effect",
+    "return_value",
+    "__enter__",
+    "__exit__"
+]
+
+[tool.mypy]
+mypy_path = ["."]
+cache_dir = ".quality/mypy/cache"
+exclude = ["vulture_whitelist", "tasks.py"]
+
+[tool.pytest.ini_options]
+cache_dir = ".quality/pytest/cache"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "order: sets execution order for tests (provided by pytest-order plugin)",
+]

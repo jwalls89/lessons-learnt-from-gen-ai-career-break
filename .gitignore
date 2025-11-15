@@ -1,0 +1,58 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+dist/
+*.egg-info/
+*.egg
+MANIFEST
+
+# Poetry
+.poetry/
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Testing and coverage
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.hypothesis/
+
+# Quality tools and caches
+.quality/
+.mypy_cache/
+.ruff_cache
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Pre-commit
+.pre-commit-cache/
+
+# Logs
+*.log
+
+# pyenv
+.python-version
