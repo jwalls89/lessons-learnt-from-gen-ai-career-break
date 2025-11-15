@@ -52,10 +52,12 @@ Key tasks:
 - `invoke precommit.check` - Run pre-commit hooks
 - `invoke tests.unit` - Run unit tests
 - `invoke tests.integration` - Run integration tests
+- `invoke tests.tox` - Run multi-version testing
 - `invoke pipaudit.check` - Check for vulnerable dependencies
 - `invoke vulture.check` - Check for unused code
 - `invoke xenon.check` - Check code complexity
 - `invoke deptry.check` - Check for unused dependencies
+- `invoke actionlint.check` - Check GitHub Actions workflows
 
 ### Make Commands
 
@@ -76,7 +78,7 @@ Key tasks:
 ### Type Checking
 
 - **MyPy**: Static type checker
-  - Cache directory: `.penguin/mypy/cache`
+  - Cache directory: `.quality/mypy/cache`
   - Excludes: `vulture_whitelist`, `tasks.py`
 
 ### Code Quality Tools
@@ -87,7 +89,7 @@ Key tasks:
   - Max average complexity: A
 
 - **Vulture**: Dead code detector
-  - Excludes: `.penguin`, `.poetry`
+  - Excludes: `.quality`, `.poetry`
 
 - **Deptry**: Dependency checker
   - Detects unused or missing dependencies
@@ -96,9 +98,9 @@ Key tasks:
 
 - **Pytest**: Test framework
   - Unit tests: `tests/unit/` (80% coverage required)
-  - Integration tests: `tests/integration/` (25% coverage required)
+  - Integration tests: `tests/integration/` (70% coverage required)
   - Socket access disabled during tests
-  - Coverage reports stored in `.coverage/`
+  - Coverage reports stored in `.quality/pytest-cov/`
 
 ### Security
 
@@ -114,7 +116,7 @@ Key tasks:
 
 ```
 .
-├── .penguin/                 # Cache and temp files for various tools
+├── .quality/                 # Cache and temp files for various tools
 ├── tasks.py                  # Invoke task definitions
 ├── pyproject.toml           # Poetry dependencies and tool configuration
 ├── Makefile                 # Common setup commands

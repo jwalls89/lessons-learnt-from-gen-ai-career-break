@@ -52,11 +52,10 @@ known_first_party = ["lessons_learnt"]
 per_rule_ignores = {"DEP003" = ["pydantic_core"]}
 
 [tool.ruff]
-cache-dir = ".penguin/ruff/cache"
+cache-dir = ".quality/ruff/cache"
 exclude = [
     ".aws-sam",
     ".codebuild",
-    ".coverage",
     ".github",
     ".ini",
     ".inspector",
@@ -152,7 +151,6 @@ ignore = [
     "D213",   # Use D212 (summary on first line) - PEP 257 convention
 ]
 extend-safe-fixes = ["ANN201","ANN202","ANN204","E712","EM101","EM102","PLC0414","PT006", "TC001", "TC003"]
-task-tags = ["penguin","nopb"]
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?)|fs)$"
 
 [tool.ruff.lint.per-file-ignores]
@@ -167,7 +165,7 @@ docstring-code-format = true
 docstring-code-line-length = "dynamic"
 
 [tool.vulture]
-exclude = [".penguin",".poetry"]
+exclude = [".quality",".poetry"]
 ignore_decorators = [
     # pydantic
     "@model_validator",
@@ -191,11 +189,11 @@ ignore_names = [
 
 [tool.mypy]
 mypy_path = ["."]
-cache_dir = ".penguin/mypy/cache"
+cache_dir = ".quality/mypy/cache"
 exclude = ["vulture_whitelist", "tasks.py"]
 
 [tool.pytest.ini_options]
-cache_dir = ".penguin/pytest/cache"
+cache_dir = ".quality/pytest/cache"
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "order: sets execution order for tests (provided by pytest-order plugin)",

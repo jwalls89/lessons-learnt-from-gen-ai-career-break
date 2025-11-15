@@ -4,4 +4,4 @@ sort = cover
 
 [run]
 branch = True
-data_file = ./.coverage/.unit-test-coverage
+data_file = ./.quality/pytest-cov/.unit-test-coverage

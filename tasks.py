@@ -80,17 +80,17 @@ ns.add_collection(ruff)
 @task
 def run_pipaudit(context: Context) -> None:
     """Run pip-audit to check for vulnerable dependencies."""
-    context.run("mkdir -p .penguin/pipaudit")
+    context.run("mkdir -p .quality/pipaudit")
     context.run(
         "poetry export --format=requirements.txt --without-hashes --only main "
-        "-o .penguin/pipaudit/requirements-main.txt"
+        "-o .quality/pipaudit/requirements-main.txt"
     )
     context.run(
         "poetry export --format=requirements.txt --without-hashes --without main "
-        "-o .penguin/pipaudit/requirements-dev.txt"
+        "-o .quality/pipaudit/requirements-dev.txt"
     )
-    context.run("poetry run pip-audit -r .penguin/pipaudit/requirements-main.txt")
-    context.run("poetry run pip-audit -r .penguin/pipaudit/requirements-dev.txt")
+    context.run("poetry run pip-audit -r .quality/pipaudit/requirements-main.txt")
+    context.run("poetry run pip-audit -r .quality/pipaudit/requirements-dev.txt")
 
 
 pipaudit = Collection("pipaudit")
