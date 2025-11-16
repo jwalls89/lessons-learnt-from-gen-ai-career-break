@@ -73,7 +73,7 @@ This repo will have a number of closed PRs which all have [Amazon Q Developer co
 
 ### MD Planning Examples
 
-Part 2, Week 2 talks about shifting left and using my first prompt to ask the Gen AI coding assistant to produce a plan first rather than jumping to an implementation.  [EXAMPLE_PLAN.md](./blog/part_2/EXAMPLE_PLAN.md) is an example from this repository when I created it and [CROSS_PLATFORM_REMEDIATION_PLAN.md] is a review that Claude Code did for me to identify cross platform issues.  It was created by [Claude Code](https://www.claude.com/product/claude-code) rather than Amazon Q Developer but gives you an idea.  In this case, I was happy with the plan and ran the plan one phase at a time, although when it came to writing the first tests, I paired with Claude Code until I was happy it knew how to implement the tests.
+Part 2, Week 2 talks about shifting left and using my first prompt to ask the Gen AI coding assistant to produce a plan first rather than jumping to an implementation.  [EXAMPLE_PLAN.md](./blog/part_2/EXAMPLE_PLAN.md) is an example from this repository when I created it and [CROSS_PLATFORM_REMEDIATION_PLAN.md](./blog/part_2/CROSS_PLATFORM_REMEDIATION_PLAN.md) is a review that Claude Code did for me to identify cross platform issues.  It was created by [Claude Code](https://www.claude.com/product/claude-code) rather than Amazon Q Developer but gives you an idea.  In this case, I was happy with the plan and ran the plan one phase at a time, although when it came to writing the first tests, I paired with Claude Code until I was happy it knew how to implement the tests.
 
 ### MD Review Example
 
@@ -81,11 +81,11 @@ Although not explicitly mentioned in Part 2, I have used [Claude Code](https://w
 
 ## Getting Started
 
-If you would like to use this repository.
+**Platform Support:**
+- ✅ **Fully tested:** macOS (latest), Ubuntu (latest)
+- ⚠️ **Partially supported:** Windows - Most invoke commands work, but some issues are under investigation
 
 ### Prerequisites
-
-**Note:** This repository has been developed and tested on WSL2 (Ubuntu). While it should work on other Unix-like systems (macOS, Linux), your experience may vary on untested platforms.
 
 Before you can run this repository locally, you'll need to install the following software:
 
@@ -146,7 +146,7 @@ The Makefile provides convenient commands for setup. Make is typically pre-insta
 
 **Note:** If Docker is not installed, you can skip Trivy checks by running:
 ```bash
-invoke project.check --skip trivy
+invoke project.check --skip trivy.check
 ```
 
 ### Setting up your local development environment
@@ -218,7 +218,7 @@ This will run all deterministic checks including linting, type checking, tests, 
 
 **Note:** If you don't have Docker installed, skip the Trivy check:
 ```bash
-invoke project.check --skip trivy
+invoke project.check --skip trivy.check
 ```
 
 For more details on individual commands and development workflows, see the [CLAUDE.md](CLAUDE.md) file.
