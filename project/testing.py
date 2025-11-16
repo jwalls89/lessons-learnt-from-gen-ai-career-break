@@ -19,7 +19,7 @@ def unit(context: Context) -> None:
 def integration(context: Context) -> None:
     """Run integration tests using pytest."""
     context.run(
-        "poetry run pytest tests/integration/ --disable-socket --cov=src "
+        "poetry run pytest tests/integration/ --disable-socket --cov=. "
         "--cov-config=.integration-test-coveragerc --cov-report term-missing --cov-report term:skip-covered",
         echo=True,
     )

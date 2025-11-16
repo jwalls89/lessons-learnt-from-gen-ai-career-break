@@ -155,6 +155,7 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?)|fs)$"
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**.py" = ["D", "S101", "PLR2004", "FBT001"]
+"project/project_task_runner.py" = ["T201"]
 
 [tool.ruff.format]
 quote-style = "double"

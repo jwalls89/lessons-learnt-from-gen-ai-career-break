@@ -5,29 +5,64 @@ from invoke.collection import Collection
 from invoke.context import Context
 
 from project import deptry, mypy, pipaudit, poetry, precommit, ruff, testing, vulture, xenon
+from project.project_task_runner import ProjectTask, ProjectTaskRunner
 
 
-@task
-def update(context: Context) -> None:
-    """Update all dependencies and pre-commit hooks."""
-    poetry.update(context)
-    precommit.update(context)
+@task(iterable=["skip"])
+def update(context: Context, skip: list[str] | None = None) -> None:
+    """Update all dependencies and pre-commit hooks.
+
+    Args:
+        context: The invoke context.
+        skip: Optional list of task names to skip (use --skip taskname multiple times).
+
+    """
+    tasks = [
+        ProjectTask(name="poetry.update", func=poetry.update, kwargs={}),
+        ProjectTask(name="precommit.update", func=precommit.update, kwargs={}),
+    ]
+
+    runner = ProjectTaskRunner(context, tasks, skip)
+    runner.run()
 
 
-@task
-def check(context: Context, *, apply_safe_fixes: bool = False, apply_unsafe_fixes: bool = False) -> None:
-    """Run all project checks."""
-    # actionlint.check(context) # noqa: ERA001 Needs actionlint adding to github   
-    precommit.check(context)
-    ruff.format(context, apply_safe_fixes=apply_safe_fixes)
-    ruff.lint(context, apply_safe_fixes=apply_safe_fixes, apply_unsafe_fixes=apply_unsafe_fixes)
-    mypy.check(context)
-    vulture.check(context)
-    xenon.check(context)
-    testing.unit(context)
-    testing.integration(context)
-    pipaudit.check(context)
-    deptry.check(context)
+@task(iterable=["skip"])
+def check(
+    context: Context,
+    skip: list[str] | None = None,
+    *,
+    apply_safe_fixes: bool = False,
+    apply_unsafe_fixes: bool = False,
+) -> None:
+    """Run all project checks.
+
+    Args:
+        context: The invoke context.
+        skip: Optional list of task names to skip (use --skip taskname multiple times).
+        apply_safe_fixes: Whether to apply safe fixes for ruff.
+        apply_unsafe_fixes: Whether to apply unsafe fixes for ruff.
+
+    """
+    tasks = [
+        # ProjectTask(name="actionlint.check", func=actionlint.check, kwargs={}),  # noqa: ERA001
+        ProjectTask(name="precommit.check", func=precommit.check, kwargs={}),
+        ProjectTask(name="ruff.format", func=ruff.format, kwargs={"apply_safe_fixes": apply_safe_fixes}),
+        ProjectTask(
+            name="ruff.lint",
+            func=ruff.lint,
+            kwargs={"apply_safe_fixes": apply_safe_fixes, "apply_unsafe_fixes": apply_unsafe_fixes},
+        ),
+        ProjectTask(name="mypy.check", func=mypy.check, kwargs={}),
+        ProjectTask(name="vulture.check", func=vulture.check, kwargs={}),
+        ProjectTask(name="xenon.check", func=xenon.check, kwargs={}),
+        ProjectTask(name="testing.unit", func=testing.unit, kwargs={}),
+        ProjectTask(name="testing.integration", func=testing.integration, kwargs={}),
+        ProjectTask(name="pipaudit.check", func=pipaudit.check, kwargs={}),
+        ProjectTask(name="deptry.check", func=deptry.check, kwargs={}),
+    ]
+
+    runner = ProjectTaskRunner(context, tasks, skip)
+    runner.run()
 
 
 collection = Collection("project")
