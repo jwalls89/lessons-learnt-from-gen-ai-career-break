@@ -18,5 +18,10 @@ runs:
       run: make install_ci
       shell: bash
     - name: Run project checks
-      run: poetry run invoke project.check --skip trivy.check
+      run: |
+        if [ "${{ runner.os }}" = "Windows" ]; then
+          poetry run invoke project.check --skip trivy.check --skip deptry.check
+        else
+          poetry run invoke project.check --skip trivy.check
+        fi
       shell: bash
