@@ -9,6 +9,7 @@
     - [Deterministic Checks](#deterministic-checks)
     - [Amazon Q Developer GitHub App Code Reviews](#amazon-q-developer-github-app-code-reviews)
     - [MD Planning Examples](#md-planning-examples)
+    - [MD Review Example](#md-review-example)
   - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
       - [1. Python 3.13+](#1-python-313)
@@ -40,7 +41,7 @@ No content added to this repo.
 
 ### Deterministic Checks
 
-Part 2 highlights that having a good suite of deterministic check is important when using a Gen AI coding assistant.  This repository itself demonstrates a range of deterministic checks that I tend to add to my python repositories.
+Part 2 highlights that having a good suite of deterministic checks is important when using a Gen AI coding assistant.  This repository itself demonstrates a range of deterministic checks that I tend to add to my python repositories.
 
 - **[Ruff](https://docs.astral.sh/ruff/)** - Fast Python linter and formatter that replaces multiple tools (black, isort, flake8, pylint) with comprehensive rule coverage including security checks, code quality, and style enforcement.
 
@@ -60,7 +61,9 @@ Part 2 highlights that having a good suite of deterministic check is important w
 
 - **[Pre-commit](https://pre-commit.com/)** - Git hook framework that runs automated checks before commits, including Gitleaks for secret detection, AWS credential scanning, and prevention of direct commits to main/master branches.
 
-All these checks are typically orchestrated in my repositories using [Invoke](https://www.pyinvoke.org/) task automation rather than traditional Makefiles. This provides a more flexible and Pythonic approach with features like hierarchical task organization, selective skipping (`--skip`), automatic safe fixes (`--apply-safe-fixes`), and unified commands. You can run all checks with a single command (`invoke project.check`), update all dependencies at once (`invoke project.update`), or execute individual tool checks as needed. Each task includes built-in help documentation (use `invoke -h <task_name>`), and `invoke --list` displays all available tasks with descriptions, eliminating the need to read through Makefiles or documentation to discover what commands are available.
+All these checks are typically orchestrated in my repositories using [Invoke](https://www.pyinvoke.org/) task automation rather than traditional Makefiles. This provides a more flexible and Pythonic approach with features like hierarchical task organization, selective skipping (`--skip`), automatic safe fixes (`--apply-safe-fixes`), and unified commands.
+
+You can run all checks with a single command (`invoke project.check`), update all dependencies at once (`invoke project.update`), or execute individual tool checks as needed. Each task includes built-in help documentation (use `invoke -h <task_name>`), and `invoke --list` displays all available tasks with descriptions, eliminating the need to read through Makefiles or documentation to discover what commands are available.
 
 ### Amazon Q Developer GitHub App Code Reviews
 
@@ -70,7 +73,11 @@ This repo will have a number of closed PRs which all have [Amazon Q Developer co
 
 ### MD Planning Examples
 
-Part 2, Week 2 talks about shifting left and using my first prompt to ask the Gen AI coding assistant to produce a plan first rather than jumping to an implementation.  [This example](./blog/part_2/EXAMPLE_PLAN.md) is an example from this repository when I was created it.  It was created by [Claude Code](https://www.claude.com/product/claude-code) rather than Amazon Q Developer but gives you an idea.  In this case, I was happy with the plan and ran the plan one phase at a time, although when it came to writing the first tests, I paired with Claude Code until I was happy it knew how to implement the tests.
+Part 2, Week 2 talks about shifting left and using my first prompt to ask the Gen AI coding assistant to produce a plan first rather than jumping to an implementation.  [EXAMPLE_PLAN.md](./blog/part_2/EXAMPLE_PLAN.md) is an example from this repository when I created it.  It was created by [Claude Code](https://www.claude.com/product/claude-code) rather than Amazon Q Developer but gives you an idea.  In this case, I was happy with the plan and ran the plan one phase at a time, although when it came to writing the first tests, I paired with Claude Code until I was happy it knew how to implement the tests.
+
+### MD Review Example
+
+Although not explicitly mentioned in Part 2, I have used [Claude Code](https://www.claude.com/product/claude-code) to proofread my blogs and repository contents for spelling, grammar, consistency and coherent arguments/prose. [README_REVIEW.md](./blog/part_2/README_REVIEW.md) is an example where I had Claude review my [README](./README.md). 
 
 ## Getting Started
 
@@ -78,7 +85,7 @@ If you would like to use this repository.
 
 ### Prerequisites
 
-**Note:** This repository has been developed and tested exclusively on WSL2 (Ubuntu). While it should work on other Unix-like systems (macOS, Linux), only WSL2 (Ubuntu) has been verified.
+**Note:** This repository has been developed and tested on WSL2 (Ubuntu). While it should work on other Unix-like systems (macOS, Linux), your experience may vary on untested platforms.
 
 Before you can run this repository locally, you'll need to install the following software:
 
