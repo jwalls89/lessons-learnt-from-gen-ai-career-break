@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 from invoke.context import Context
 
-from project.precommit import check, update
+from project.tasks.precommit import check, update
 
 
 class TestPrecommit:

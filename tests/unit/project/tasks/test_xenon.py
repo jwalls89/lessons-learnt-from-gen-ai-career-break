@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 from invoke.context import Context
 
-from project.xenon import check
+from project.tasks.xenon import check
 
 
 class TestXenon:

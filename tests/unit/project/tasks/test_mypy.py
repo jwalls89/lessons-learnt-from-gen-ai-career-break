@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 from invoke.context import Context
 
-from project.mypy import check
+from project.tasks.mypy import check
 
 
 class TestMypy:

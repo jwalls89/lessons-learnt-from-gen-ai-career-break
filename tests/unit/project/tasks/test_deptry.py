@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 from invoke.context import Context
 
-from project.deptry import check
+from project.tasks.deptry import check
 
 
 class TestDeptry:

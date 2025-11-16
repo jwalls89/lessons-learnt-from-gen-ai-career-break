@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 from invoke.context import Context
 
-from project.poetry import update
+from project.tasks.poetry import update
 
 
 class TestPoetry:

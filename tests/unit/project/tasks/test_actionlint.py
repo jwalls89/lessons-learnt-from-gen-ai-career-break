@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 from invoke.context import Context
 
-from project.actionlint import check
+from project.tasks.actionlint import check
 
 
 class TestActionlint:

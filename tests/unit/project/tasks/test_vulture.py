@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 from invoke.context import Context
 
-from project.vulture import check
+from project.tasks.vulture import check
 
 
 class TestVulture:

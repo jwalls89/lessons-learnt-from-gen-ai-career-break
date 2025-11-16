@@ -6,9 +6,9 @@ import pytest
 from invoke.context import Context
 from pytest_mock import MockerFixture
 
-from project import deptry, mypy, pipaudit, poetry, precommit, ruff, testing, vulture, xenon
 from project.project import check, update
 from project.project_task_runner import ProjectTask, ProjectTaskRunner
+from project.tasks import deptry, mypy, pipaudit, poetry, precommit, ruff, testing, vulture, xenon
 
 
 class TestUpdate:

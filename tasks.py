@@ -3,7 +3,8 @@
 from invoke.collection import Collection
 
 # Import all task modules
-from project import (
+from project import project as project_tasks
+from project.tasks import (
     actionlint,
     deptry,
     mypy,
@@ -14,7 +15,6 @@ from project import (
     vulture,
     xenon,
 )
-from project import project as project_tasks
 
 # Create root namespace
 ns = Collection()

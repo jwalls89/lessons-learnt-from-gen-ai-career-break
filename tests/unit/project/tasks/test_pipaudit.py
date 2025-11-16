@@ -4,7 +4,7 @@ from unittest.mock import Mock, call
 
 from invoke.context import Context
 
-from project.pipaudit import check
+from project.tasks.pipaudit import check
 
 
 class TestPipaudit:

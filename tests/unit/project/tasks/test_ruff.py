@@ -4,8 +4,8 @@ from unittest.mock import Mock
 
 from invoke.context import Context
 
-from project.ruff import format as ruff_format
-from project.ruff import lint
+from project.tasks.ruff import format as ruff_format
+from project.tasks.ruff import lint
 
 
 class TestRuff:

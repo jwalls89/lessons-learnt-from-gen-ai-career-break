@@ -4,8 +4,8 @@ from invoke import task
 from invoke.collection import Collection
 from invoke.context import Context
 
-from project import deptry, mypy, pipaudit, poetry, precommit, ruff, testing, vulture, xenon
 from project.project_task_runner import ProjectTask, ProjectTaskRunner
+from project.tasks import deptry, mypy, pipaudit, poetry, precommit, ruff, testing, vulture, xenon
 
 
 @task(iterable=["skip"])

@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 from invoke.context import Context
 
-from project.testing import integration, tox, unit
+from project.tasks.testing import integration, tox, unit
 
 
 class TestTesting:
