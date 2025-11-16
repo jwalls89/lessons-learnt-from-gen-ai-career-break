@@ -9,7 +9,7 @@ from invoke.context import Context
 def unit(context: Context) -> None:
     """Run unit tests using pytest."""
     context.run(
-        "poetry run pytest tests/unit/ --disable-socket --cov=. "
+        "poetry run pytest tests/unit/ --disable-socket --cov=src --cov=project "
         "--cov-config=.unit-test-coveragerc --cov-report term-missing --cov-report term:skip-covered",
         echo=True,
     )
@@ -19,7 +19,7 @@ def unit(context: Context) -> None:
 def integration(context: Context) -> None:
     """Run integration tests using pytest."""
     context.run(
-        "poetry run pytest tests/integration/ --disable-socket --cov=. "
+        "poetry run pytest tests/integration/ --disable-socket --cov=src "
         "--cov-config=.integration-test-coveragerc --cov-report term-missing --cov-report term:skip-covered",
         echo=True,
     )

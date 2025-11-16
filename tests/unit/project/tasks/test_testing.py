@@ -17,7 +17,7 @@ class TestTesting:
         unit(mock_context)
 
         expected_command = (
-            "poetry run pytest tests/unit/ --disable-socket --cov=. "
+            "poetry run pytest tests/unit/ --disable-socket --cov=src --cov=project "
             "--cov-config=.unit-test-coveragerc --cov-report term-missing --cov-report term:skip-covered"
         )
         mock_context.run.assert_called_once_with(expected_command, echo=True)
@@ -29,7 +29,7 @@ class TestTesting:
         integration(mock_context)
 
         expected_command = (
-            "poetry run pytest tests/integration/ --disable-socket --cov=. "
+            "poetry run pytest tests/integration/ --disable-socket --cov=src "
             "--cov-config=.integration-test-coveragerc --cov-report term-missing --cov-report term:skip-covered"
         )
         mock_context.run.assert_called_once_with(expected_command, echo=True)
