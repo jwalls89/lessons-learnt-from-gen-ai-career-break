@@ -16,5 +16,10 @@ runs:
       run: make install_ci
       shell: bash
     - name: Run project checks
-      run: SKIP=no-commit-to-branch poetry run invoke project.check
+      run: |
+        if [ "${{ github.ref_name }}" = "main" ] || [ "${{ github.ref_name }}" = "master" ]; then
+          SKIP=no-commit-to-branch poetry run invoke project.check
+        else
+          poetry run invoke project.check
+        fi
       shell: bash
