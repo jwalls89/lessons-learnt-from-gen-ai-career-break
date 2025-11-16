@@ -41,3 +41,13 @@ repos:
     rev: v8.29.0
     hooks:
       - id: gitleaks
+-   repo: https://github.com/rhysd/actionlint
+    rev: v1.7.8
+    hooks:
+      - id: actionlint
+-   repo: https://github.com/frnmst/md-toc
+    rev: 9.0.0
+    hooks:
+      - id: md-toc
+        args: ['-p', 'github', '-l6']
+        files: README\.md

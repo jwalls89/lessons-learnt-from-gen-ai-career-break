@@ -5,7 +5,6 @@ from invoke.collection import Collection
 # Import all task modules
 from project import project as project_tasks
 from project.tasks import (
-    actionlint,
     deptry,
     mypy,
     pipaudit,
@@ -21,7 +20,6 @@ from project.tasks import (
 ns = Collection()
 
 # Register all collections
-ns.add_collection(actionlint.collection)
 ns.add_collection(deptry.collection)
 ns.add_collection(mypy.collection)
 ns.add_collection(poetry.collection)

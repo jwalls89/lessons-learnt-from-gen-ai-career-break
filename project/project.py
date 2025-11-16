@@ -39,13 +39,12 @@ def check(
     Args:
         context: The invoke context.
         skip: Optional list of task names to skip (use --skip taskname multiple times).
-        apply_safe_fixes: Whether to apply safe fixes for ruff.
+        apply_safe_fixes: Whether to apply safe fixes for precommit and ruff.
         apply_unsafe_fixes: Whether to apply unsafe fixes for ruff.
 
     """
     tasks = [
-        # ProjectTask(name="actionlint.check", func=actionlint.check, kwargs={}),  # noqa: ERA001
-        ProjectTask(name="precommit.check", func=precommit.check, kwargs={}),
+        ProjectTask(name="precommit.check", func=precommit.check, kwargs={"apply_safe_fixes": apply_safe_fixes}),
         ProjectTask(name="ruff.format", func=ruff.format, kwargs={"apply_safe_fixes": apply_safe_fixes}),
         ProjectTask(
             name="ruff.lint",
