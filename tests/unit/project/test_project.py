@@ -8,7 +8,7 @@ from pytest_mock import MockerFixture
 
 from project.project import check, update
 from project.project_task_runner import ProjectTask, ProjectTaskRunner
-from project.tasks import deptry, mypy, pipaudit, poetry, precommit, ruff, testing, vulture, xenon
+from project.tasks import deptry, mypy, pipaudit, poetry, precommit, ruff, testing, trivy, vulture, xenon
 
 
 class TestUpdate:
@@ -67,7 +67,7 @@ class TestCheck:
         self.mock_runner_class.assert_called_once_with(
             self.mock_context,
             [
-                ProjectTask(name="precommit.check", func=precommit.check, kwargs={}),
+                ProjectTask(name="precommit.check", func=precommit.check, kwargs={"apply_safe_fixes": False}),
                 ProjectTask(name="ruff.format", func=ruff.format, kwargs={"apply_safe_fixes": False}),
                 ProjectTask(
                     name="ruff.lint",
@@ -77,23 +77,26 @@ class TestCheck:
                 ProjectTask(name="mypy.check", func=mypy.check, kwargs={}),
                 ProjectTask(name="vulture.check", func=vulture.check, kwargs={}),
                 ProjectTask(name="xenon.check", func=xenon.check, kwargs={}),
-                ProjectTask(name="testing.unit", func=testing.unit, kwargs={}),
-                ProjectTask(name="testing.integration", func=testing.integration, kwargs={}),
+                ProjectTask(name="tests.unit", func=testing.unit, kwargs={}),
+                ProjectTask(name="tests.integration", func=testing.integration, kwargs={}),
                 ProjectTask(name="pipaudit.check", func=pipaudit.check, kwargs={}),
                 ProjectTask(name="deptry.check", func=deptry.check, kwargs={}),
+                ProjectTask(name="trivy.check", func=trivy.check, kwargs={}),
             ],
             None,
         )
         self.mock_runner.run.assert_called_once()
 
-    def test_check_passes_apply_safe_fixes_to_ruff_tasks(self) -> None:
-        """Test that check passes apply_safe_fixes parameter to ruff tasks."""
+    def test_check_passes_apply_safe_fixes_to_precommit_and_ruff_tasks(self) -> None:
+        """Test that check passes apply_safe_fixes parameter to precommit and ruff tasks."""
         check(self.mock_context, apply_safe_fixes=True)
 
         tasks_list = self.mock_runner_class.call_args[0][1]
+        precommit_check_task = next(task for task in tasks_list if task.name == "precommit.check")
         ruff_format_task = next(task for task in tasks_list if task.name == "ruff.format")
         ruff_lint_task = next(task for task in tasks_list if task.name == "ruff.lint")
 
+        assert precommit_check_task.kwargs == {"apply_safe_fixes": True}
         assert ruff_format_task.kwargs == {"apply_safe_fixes": True}
         assert ruff_lint_task.kwargs == {"apply_safe_fixes": True, "apply_unsafe_fixes": False}
 

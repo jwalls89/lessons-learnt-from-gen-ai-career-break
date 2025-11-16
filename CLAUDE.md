@@ -12,6 +12,7 @@ This repository documents lessons learned from a career break focused on generat
 
 - Python 3.13+ (managed via pyenv, see `.python-version`)
 - Poetry 2.2.1+
+- Docker (optional - required only for `invoke trivy.check`)
 
 ### Initial Setup
 
@@ -25,6 +26,33 @@ make install_ci
 # For interactive development
 make install_dev
 ```
+
+### Windows Setup Notes
+
+The project is cross-platform compatible with Windows, macOS, and Linux. Windows users have several options for running Make commands:
+
+**Option 1: Install Make via Chocolatey (Recommended)**
+```powershell
+choco install make
+```
+
+**Option 2: Run Commands Directly**
+Instead of `make install_ci`, run:
+```powershell
+poetry install
+poetry run pre-commit install
+```
+
+Instead of `make install_dev`, run:
+```powershell
+poetry install
+poetry run pre-commit install
+poetry shell
+invoke --list
+```
+
+**Option 3: Use WSL (Windows Subsystem for Linux)**
+All commands will work natively in WSL Ubuntu.
 
 ## Common Commands
 
@@ -54,6 +82,7 @@ Key tasks:
 - `invoke tests.integration` - Run integration tests
 - `invoke tests.tox` - Run multi-version testing
 - `invoke pipaudit.check` - Check for vulnerable dependencies
+- `invoke trivy.check` - Run comprehensive security scanning (vulnerabilities, secrets, misconfigurations, licenses)
 - `invoke vulture.check` - Check for unused code
 - `invoke xenon.check` - Check code complexity
 - `invoke deptry.check` - Check for unused dependencies
@@ -90,6 +119,103 @@ poetry run pytest -m "not slow"
 - `make install_ci` - Install dependencies and pre-commit hooks
 - `make install_dev` - Full development setup with shell activation
 
+## Project Structure
+
+```
+.
+├── .github/                      # GitHub Actions workflows and configuration
+│   ├── workflows/
+│   │   ├── main.yml             # CI pipeline for main branch
+│   │   └── pr.yml               # CI pipeline for pull requests
+│   ├── actions/                 # Reusable GitHub Actions
+│   │   ├── ci-steps/            # Composite action for CI steps
+│   │   └── multi-python-tests/  # Composite action for multi-Python testing
+│   └── dependabot.yml           # Automated dependency updates
+├── .quality/                     # Cache and temp files for various tools
+│   ├── mypy/cache/              # MyPy cache
+│   ├── ruff/cache/              # Ruff cache
+│   ├── pytest/cache/            # Pytest cache
+│   └── trivy/                   # Trivy cache
+├── project/                      # Invoke task definitions (organized by tool)
+│   ├── project.py               # Top-level tasks (project.check, project.update)
+│   ├── project_task_runner.py   # Task runner infrastructure
+│   ├── utils.py                 # Cross-platform utility functions
+│   └── tasks/                   # Individual tool task modules
+│       ├── actionlint.py        # GitHub Actions linting tasks
+│       ├── deptry.py            # Dependency checking tasks
+│       ├── mypy.py              # Type checking tasks
+│       ├── pipaudit.py          # Security audit tasks
+│       ├── poetry.py            # Poetry management tasks
+│       ├── precommit.py         # Pre-commit hook tasks
+│       ├── ruff.py              # Linting/formatting tasks
+│       ├── testing.py           # Test execution tasks
+│       ├── trivy.py             # Trivy security scanning tasks
+│       ├── vulture.py           # Dead code detection tasks
+│       └── xenon.py             # Complexity checking tasks
+├── src/lessons_learnt/           # Main package source code
+│   ├── __init__.py              # Package exports
+│   ├── example.py               # Example module
+│   └── py.typed                 # PEP 561 type hints marker
+├── tests/
+│   ├── unit/                    # Unit tests (80% coverage required)
+│   └── integration/             # Integration tests (70% coverage required)
+├── tasks.py                      # Invoke task collection entrypoint
+├── pyproject.toml               # Poetry dependencies and tool configuration
+├── Makefile                     # Common setup commands
+├── .pre-commit-config.yaml      # Pre-commit hook configuration
+├── .python-version              # Python version specification (3.13.1, 3.14.0)
+├── .unit-test-coveragerc        # Unit test coverage configuration
+├── .integration-test-coveragerc # Integration test coverage configuration
+├── vulture_whitelist            # Vulture dead code exclusions
+└── CLAUDE.md                    # This file
+```
+
+## Code Architecture
+
+### Package Organization
+
+- **Package name**: `lessons_learnt` (source in `src/lessons_learnt/`)
+- **Package mode**: Enabled with `py.typed` marker for PEP 561 compliance
+- **Module exports**: Controlled via `__init__.py` (only exports what's intended for public API)
+- **First-party detection**: Configured in deptry as `lessons_learnt`
+
+### Invoke Task Architecture
+
+The task system is organized hierarchically:
+
+1. **Root entrypoint** (`tasks.py`): Imports and registers all task collections
+2. **Project-level tasks** (`project/project.py`): Orchestrates multiple tools
+   - `project.check`: Runs all quality checks in sequence (supports `--skip` and `--apply-safe-fixes`)
+   - `project.update`: Updates all dependencies and pre-commit hooks
+3. **Tool-specific tasks** (`project/tasks/*.py`): Individual tool operations
+   - Each module exports a Collection with tool-specific tasks
+   - All `context.run()` commands use `echo=True` to display commands being executed
+4. **Task runner** (`project/project_task_runner.py`): Executes tasks with skipping support
+5. **Cross-platform utilities** (`project/utils.py`): Platform-agnostic helper functions
+   - `ensure_directory()`: Cross-platform replacement for `mkdir -p`
+   - `get_current_working_directory()`: Cross-platform replacement for `$(pwd)`
+
+### Cross-Platform Compatibility
+
+The project is designed to work on **Windows**, **macOS**, and **Linux** without modification:
+
+- **No shell-specific commands**: All tasks use Python's `pathlib` and standard library instead of bash/shell commands
+- **Path handling**: Uses `Path` objects that automatically handle OS-specific path separators
+- **Docker paths**: Absolute paths with `Path.cwd().resolve()` work correctly on Docker Desktop for Windows
+- **Utility functions**: `project/utils.py` provides cross-platform replacements for common shell operations
+
+**When adding new tasks**:
+- ❌ Avoid: `context.run("mkdir -p dir")` (Unix-only)
+- ✅ Use: `ensure_directory("dir")` (cross-platform)
+- ❌ Avoid: `context.run(f"cmd -v $(pwd)")` (bash-only)
+- ✅ Use: `get_current_working_directory()` (cross-platform)
+
+### Dependency Philosophy
+
+- **Minimal runtime dependencies**: Only `invoke` for task automation
+- **Comprehensive dev dependencies**: 17 development tools for quality, testing, and security
+- **Poetry plugin requirement**: `poetry-plugin-export` for pip-audit compatibility
+
 ## Code Quality Standards
 
 ### Linting & Formatting
@@ -110,6 +236,7 @@ poetry run pytest -m "not slow"
 - **MyPy**: Static type checker
   - Cache directory: `.quality/mypy/cache`
   - Excludes: `vulture_whitelist`, `tasks.py`
+  - Type hints required for all functions (enforced by ruff ANN rules)
 
 ### Code Quality Tools
 
@@ -138,7 +265,7 @@ poetry run pytest -m "not slow"
   - Test markers available:
     - `slow`: Mark slow tests (deselect with `-m "not slow"`)
     - `order`: Control test execution order (via pytest-order)
-  - Additional plugins: pytest-mock, pytest-unordered, pyfakefs, polyfactory, freezegun
+  - Additional plugins: pytest-mock
 
 ### Security
 
@@ -147,55 +274,16 @@ poetry run pytest -m "not slow"
   - AWS credentials detection
   - Private key detection
   - Code quality checks
+  - No direct commits to main/master branches
 
 - **Pip-audit**: Vulnerability scanning for dependencies
 
-## Project Structure
-
-```
-.
-├── .github/                      # GitHub Actions workflows and configuration
-│   ├── workflows/
-│   │   ├── main.yml             # CI pipeline for main branch
-│   │   └── pr.yml               # CI pipeline for pull requests
-│   ├── actions/                 # Reusable GitHub Actions
-│   └── dependabot.yml           # Automated dependency updates
-├── .quality/                     # Cache and temp files for various tools
-│   ├── mypy/cache/              # MyPy cache
-│   ├── ruff/cache/              # Ruff cache
-│   └── pytest/cache/            # Pytest cache
-├── src/lessons_learnt/           # Main package source code
-│   ├── __init__.py              # Package exports
-│   ├── example.py               # Example module
-│   └── py.typed                 # PEP 561 type hints marker
-├── tests/
-│   ├── unit/                    # Unit tests (80% coverage required)
-│   └── integration/             # Integration tests (70% coverage required)
-├── tasks.py                      # Invoke task definitions
-├── pyproject.toml               # Poetry dependencies and tool configuration
-├── Makefile                     # Common setup commands
-├── .pre-commit-config.yaml      # Pre-commit hook configuration
-├── .python-version              # Python version specification (3.13.1, 3.14.0)
-├── .unit-test-coveragerc        # Unit test coverage configuration
-├── .integration-test-coveragerc # Integration test coverage configuration
-├── vulture_whitelist            # Vulture dead code exclusions
-└── CLAUDE.md                    # This file
-```
-
-## Code Architecture
-
-### Package Organization
-
-- **Package name**: `lessons_learnt` (source in `src/lessons_learnt/`)
-- **Package mode**: Enabled with `py.typed` marker for PEP 561 compliance
-- **Module exports**: Controlled via `__init__.py` (only exports what's intended for public API)
-- **First-party detection**: Configured in deptry as `lessons_learnt`
-
-### Dependency Philosophy
-
-- **Minimal runtime dependencies**: Only `invoke` for task automation
-- **Comprehensive dev dependencies**: 17 development tools for quality, testing, and security
-- **Poetry plugin requirement**: `poetry-plugin-export` for pip-audit compatibility
+- **Trivy**: Comprehensive security scanner
+  - Runs in Docker container (`aquasec/trivy`)
+  - Scans filesystem for multiple security issues
+  - Scanners enabled: vulnerabilities, secrets, misconfigurations, licenses
+  - Exits with error code 1 if any issues are found
+  - Cache stored in `.quality/trivy/`
 
 ## CI/CD Pipeline
 
@@ -204,10 +292,11 @@ poetry run pytest -m "not slow"
 - **main.yml**: Runs on push to main branch
   - Executes all CI steps via composite action
   - Runs unit and integration tests on Python 3.13
+  - Tests on `ubuntu-latest`, `windows-latest`, and `macos-latest`
   - Python 3.14 support pending GitHub Actions update
 
 - **pr.yml**: Runs on all pull requests
-  - Same test matrix as main branch
+  - Same test matrix as main branch (3 OS × 2 Python versions = 6 combinations)
   - Concurrent runs with cancellation of in-progress jobs
   - Includes PR write permissions for comments
 
@@ -232,9 +321,11 @@ poetry run pytest -m "not slow"
 
 ## Important Notes
 
-- **All `context.run()` commands in tasks.py use `echo=True`** to display commands being executed
+- **Cross-platform compatibility is mandatory**: Use `project/utils.py` functions instead of shell commands
+- **All `context.run()` commands in tasks use `echo=True`** to display commands being executed
 - **Socket access is disabled in tests** to prevent accidental network calls
 - **Poetry checks are temporarily disabled** in pre-commit due to GitHub Actions v2.2.1 compatibility
 - **Actionlint check exists** but not yet integrated into main CI workflow
 - **Type hints are required** for all functions (enforced by ruff ANN rules)
 - **Line length is 120 characters** (different from common 88/100 defaults)
+- **CI/CD tests on 3 platforms**: ubuntu-latest, windows-latest, macos-latest

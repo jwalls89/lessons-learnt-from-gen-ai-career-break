@@ -5,7 +5,7 @@ from invoke.collection import Collection
 from invoke.context import Context
 
 from project.project_task_runner import ProjectTask, ProjectTaskRunner
-from project.tasks import deptry, mypy, pipaudit, poetry, precommit, ruff, testing, vulture, xenon
+from project.tasks import deptry, mypy, pipaudit, poetry, precommit, ruff, testing, trivy, vulture, xenon
 
 
 @task(iterable=["skip"])
@@ -39,13 +39,12 @@ def check(
     Args:
         context: The invoke context.
         skip: Optional list of task names to skip (use --skip taskname multiple times).
-        apply_safe_fixes: Whether to apply safe fixes for ruff.
+        apply_safe_fixes: Whether to apply safe fixes for precommit and ruff.
         apply_unsafe_fixes: Whether to apply unsafe fixes for ruff.
 
     """
     tasks = [
-        # ProjectTask(name="actionlint.check", func=actionlint.check, kwargs={}),  # noqa: ERA001
-        ProjectTask(name="precommit.check", func=precommit.check, kwargs={}),
+        ProjectTask(name="precommit.check", func=precommit.check, kwargs={"apply_safe_fixes": apply_safe_fixes}),
         ProjectTask(name="ruff.format", func=ruff.format, kwargs={"apply_safe_fixes": apply_safe_fixes}),
         ProjectTask(
             name="ruff.lint",
@@ -55,10 +54,11 @@ def check(
         ProjectTask(name="mypy.check", func=mypy.check, kwargs={}),
         ProjectTask(name="vulture.check", func=vulture.check, kwargs={}),
         ProjectTask(name="xenon.check", func=xenon.check, kwargs={}),
-        ProjectTask(name="testing.unit", func=testing.unit, kwargs={}),
-        ProjectTask(name="testing.integration", func=testing.integration, kwargs={}),
+        ProjectTask(name="tests.unit", func=testing.unit, kwargs={}),
+        ProjectTask(name="tests.integration", func=testing.integration, kwargs={}),
         ProjectTask(name="pipaudit.check", func=pipaudit.check, kwargs={}),
         ProjectTask(name="deptry.check", func=deptry.check, kwargs={}),
+        ProjectTask(name="trivy.check", func=trivy.check, kwargs={}),
     ]
 
     runner = ProjectTaskRunner(context, tasks, skip)

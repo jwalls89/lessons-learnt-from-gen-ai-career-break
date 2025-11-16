@@ -20,13 +20,12 @@ jobs:
         uses: ./.github/actions/ci-steps
 
   test-multi-python:
-    name: Test Python ${{ matrix.python-version }}
-    runs-on: ubuntu-latest
+    name: Test Python ${{ matrix.python-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # 2025-10-14: Commented out 3.14 - Waiting for github to update their 3.14 build to a later version without union type issue
-        python-version: ["3.13"]
-        # python-version: ["3.13", "3.14"]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.13", "3.14"]
     steps:
       - name: Checkout
         uses: actions/checkout@v5
