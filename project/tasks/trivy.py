@@ -4,19 +4,24 @@ from invoke import task
 from invoke.collection import Collection
 from invoke.context import Context
 
+from project.utils import ensure_directory, get_current_working_directory
+
 
 @task
 def check(context: Context) -> None:
     """Run trivy security scanner using Docker to scan the filesystem for vulnerabilities and security issues."""
-    context.run("mkdir -p .quality/trivy", echo=True)
+    workspace_path = get_current_working_directory()
+    cache_path = workspace_path / ".quality" / "trivy"
+    ensure_directory(cache_path)
+
     context.run(
-        "docker run --rm "
-        "-v $(pwd):/workspace "
-        "-v $(pwd)/.quality/trivy:/root/.cache/ "
-        "aquasec/trivy fs "
-        "--scanners vuln,secret,misconfig,license "
-        "--exit-code 1 "
-        "/workspace",
+        f"docker run --rm "
+        f"-v {workspace_path}:/workspace "
+        f"-v {cache_path}:/root/.cache/ "
+        f"aquasec/trivy fs "
+        f"--scanners vuln,secret,misconfig,license "
+        f"--exit-code 1 "
+        f"/workspace",
         echo=True,
     )
 

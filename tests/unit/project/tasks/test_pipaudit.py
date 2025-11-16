@@ -3,6 +3,7 @@
 from unittest.mock import Mock, call
 
 from invoke.context import Context
+from pytest_mock import MockerFixture
 
 from project.tasks.pipaudit import check
 
@@ -10,14 +11,19 @@ from project.tasks.pipaudit import check
 class TestPipaudit:
     """Test suite for the check function."""
 
-    def test_check_runs_all_commands_in_sequence_when_invoked(self) -> None:
+    def test_check_runs_all_commands_in_sequence_when_invoked(self, mocker: MockerFixture) -> None:
         """Test that check runs all required commands in correct order with echo enabled."""
+        # Mock ensure_directory to prevent filesystem writes during test
+        mock_ensure_directory = mocker.patch("project.tasks.pipaudit.ensure_directory")
         mock_context = Mock(spec_set=Context)
 
         check(mock_context)
 
+        # Verify ensure_directory was called
+        mock_ensure_directory.assert_called_once_with(".quality/pipaudit")
+
+        # Verify the remaining poetry commands were called
         expected_calls = [
-            call("mkdir -p .quality/pipaudit", echo=True),
             call(
                 "poetry export --format=requirements.txt --without-hashes --only main "
                 "-o .quality/pipaudit/requirements-main.txt",
@@ -32,4 +38,4 @@ class TestPipaudit:
             call("poetry run pip-audit -r .quality/pipaudit/requirements-dev.txt", echo=True),
         ]
         mock_context.run.assert_has_calls(expected_calls, any_order=False)
-        assert mock_context.run.call_count == 5
+        assert mock_context.run.call_count == 4

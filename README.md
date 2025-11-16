@@ -73,7 +73,7 @@ This repo will have a number of closed PRs which all have [Amazon Q Developer co
 
 ### MD Planning Examples
 
-Part 2, Week 2 talks about shifting left and using my first prompt to ask the Gen AI coding assistant to produce a plan first rather than jumping to an implementation.  [EXAMPLE_PLAN.md](./blog/part_2/EXAMPLE_PLAN.md) is an example from this repository when I created it.  It was created by [Claude Code](https://www.claude.com/product/claude-code) rather than Amazon Q Developer but gives you an idea.  In this case, I was happy with the plan and ran the plan one phase at a time, although when it came to writing the first tests, I paired with Claude Code until I was happy it knew how to implement the tests.
+Part 2, Week 2 talks about shifting left and using my first prompt to ask the Gen AI coding assistant to produce a plan first rather than jumping to an implementation.  [EXAMPLE_PLAN.md](./blog/part_2/EXAMPLE_PLAN.md) is an example from this repository when I created it and [CROSS_PLATFORM_REMEDIATION_PLAN.md] is a review that Claude Code did for me to identify cross platform issues.  It was created by [Claude Code](https://www.claude.com/product/claude-code) rather than Amazon Q Developer but gives you an idea.  In this case, I was happy with the plan and ran the plan one phase at a time, although when it came to writing the first tests, I paired with Claude Code until I was happy it knew how to implement the tests.
 
 ### MD Review Example
 
