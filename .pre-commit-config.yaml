@@ -49,5 +49,5 @@ repos:
     rev: 9.0.0
     hooks:
       - id: md-toc
-        args: ['-p', 'github', '-l6']
+        args: ['-p', '-n', '\n', 'github', '-l', '6']
         files: README\.md
