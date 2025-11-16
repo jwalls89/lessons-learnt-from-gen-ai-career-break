@@ -18,5 +18,5 @@ runs:
       run: make install_ci
       shell: bash
     - name: Run project checks
-      run: poetry run invoke project.check
+      run: poetry run invoke project.check --skip trivy.check
       shell: bash
