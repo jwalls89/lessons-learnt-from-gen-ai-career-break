@@ -265,7 +265,7 @@ The project is designed to work on **Windows**, **macOS**, and **Linux** without
   - Test markers available:
     - `slow`: Mark slow tests (deselect with `-m "not slow"`)
     - `order`: Control test execution order (via pytest-order)
-  - Additional plugins: pytest-mock, pytest-unordered, pyfakefs, polyfactory, freezegun
+  - Additional plugins: pytest-mock
 
 ### Security
 

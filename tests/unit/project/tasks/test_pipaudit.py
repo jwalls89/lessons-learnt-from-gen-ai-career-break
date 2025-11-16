@@ -22,20 +22,13 @@ class TestPipaudit:
         # Verify ensure_directory was called
         mock_ensure_directory.assert_called_once_with(".quality/pipaudit")
 
-        # Verify the remaining poetry commands were called
+        # Verify the poetry commands were called
         expected_calls = [
             call(
-                "poetry export --format=requirements.txt --without-hashes --only main "
-                "-o .quality/pipaudit/requirements-main.txt",
+                "poetry export --format=requirements.txt --without-hashes -o .quality/pipaudit/requirements.txt",
                 echo=True,
             ),
-            call(
-                "poetry export --format=requirements.txt --without-hashes --without main "
-                "-o .quality/pipaudit/requirements-dev.txt",
-                echo=True,
-            ),
-            call("poetry run pip-audit -r .quality/pipaudit/requirements-main.txt", echo=True),
-            call("poetry run pip-audit -r .quality/pipaudit/requirements-dev.txt", echo=True),
+            call("poetry run pip-audit -r .quality/pipaudit/requirements.txt", echo=True),
         ]
         mock_context.run.assert_has_calls(expected_calls, any_order=False)
-        assert mock_context.run.call_count == 4
+        assert mock_context.run.call_count == 2
