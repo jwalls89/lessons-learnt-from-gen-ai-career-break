@@ -9,12 +9,12 @@ from project import (
     mypy,
     pipaudit,
     precommit,
-    project_tasks,
     ruff,
     testing,
     vulture,
     xenon,
 )
+from project import project as project_tasks
 
 # Create root namespace
 ns = Collection()
