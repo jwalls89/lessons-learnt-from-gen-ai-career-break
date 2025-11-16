@@ -12,6 +12,7 @@ from project.tasks import (
     precommit,
     ruff,
     testing,
+    trivy,
     vulture,
     xenon,
 )
@@ -28,5 +29,6 @@ ns.add_collection(precommit.collection)
 ns.add_collection(project_tasks.collection)
 ns.add_collection(ruff.collection)
 ns.add_collection(testing.collection)
+ns.add_collection(trivy.collection)
 ns.add_collection(vulture.collection)
 ns.add_collection(xenon.collection)

@@ -8,7 +8,7 @@ from pytest_mock import MockerFixture
 
 from project.project import check, update
 from project.project_task_runner import ProjectTask, ProjectTaskRunner
-from project.tasks import deptry, mypy, pipaudit, poetry, precommit, ruff, testing, vulture, xenon
+from project.tasks import deptry, mypy, pipaudit, poetry, precommit, ruff, testing, trivy, vulture, xenon
 
 
 class TestUpdate:
@@ -81,6 +81,7 @@ class TestCheck:
                 ProjectTask(name="testing.integration", func=testing.integration, kwargs={}),
                 ProjectTask(name="pipaudit.check", func=pipaudit.check, kwargs={}),
                 ProjectTask(name="deptry.check", func=deptry.check, kwargs={}),
+                ProjectTask(name="trivy.check", func=trivy.check, kwargs={}),
             ],
             None,
         )

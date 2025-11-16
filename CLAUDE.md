@@ -54,6 +54,7 @@ Key tasks:
 - `invoke tests.integration` - Run integration tests
 - `invoke tests.tox` - Run multi-version testing
 - `invoke pipaudit.check` - Check for vulnerable dependencies
+- `invoke trivy.check` - Run comprehensive security scanning (vulnerabilities, secrets, misconfigurations, licenses)
 - `invoke vulture.check` - Check for unused code
 - `invoke xenon.check` - Check code complexity
 - `invoke deptry.check` - Check for unused dependencies
@@ -105,7 +106,8 @@ poetry run pytest -m "not slow"
 ├── .quality/                     # Cache and temp files for various tools
 │   ├── mypy/cache/              # MyPy cache
 │   ├── ruff/cache/              # Ruff cache
-│   └── pytest/cache/            # Pytest cache
+│   ├── pytest/cache/            # Pytest cache
+│   └── trivy/                   # Trivy cache
 ├── project/                      # Invoke task definitions (organized by tool)
 │   ├── project.py               # Top-level tasks (project.check, project.update)
 │   ├── project_task_runner.py   # Task runner infrastructure
@@ -118,6 +120,7 @@ poetry run pytest -m "not slow"
 │       ├── precommit.py         # Pre-commit hook tasks
 │       ├── ruff.py              # Linting/formatting tasks
 │       ├── testing.py           # Test execution tasks
+│       ├── trivy.py             # Trivy security scanning tasks
 │       ├── vulture.py           # Dead code detection tasks
 │       └── xenon.py             # Complexity checking tasks
 ├── src/lessons_learnt/           # Main package source code
@@ -227,6 +230,13 @@ The task system is organized hierarchically:
   - No direct commits to main/master branches
 
 - **Pip-audit**: Vulnerability scanning for dependencies
+
+- **Trivy**: Comprehensive security scanner
+  - Runs in Docker container (`aquasec/trivy`)
+  - Scans filesystem for multiple security issues
+  - Scanners enabled: vulnerabilities, secrets, misconfigurations, licenses
+  - Exits with error code 1 if any issues are found
+  - Cache stored in `.quality/trivy/`
 
 ## CI/CD Pipeline
 

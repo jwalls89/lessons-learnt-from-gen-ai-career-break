@@ -5,7 +5,7 @@ from invoke.collection import Collection
 from invoke.context import Context
 
 from project.project_task_runner import ProjectTask, ProjectTaskRunner
-from project.tasks import deptry, mypy, pipaudit, poetry, precommit, ruff, testing, vulture, xenon
+from project.tasks import deptry, mypy, pipaudit, poetry, precommit, ruff, testing, trivy, vulture, xenon
 
 
 @task(iterable=["skip"])
@@ -58,6 +58,7 @@ def check(
         ProjectTask(name="testing.integration", func=testing.integration, kwargs={}),
         ProjectTask(name="pipaudit.check", func=pipaudit.check, kwargs={}),
         ProjectTask(name="deptry.check", func=deptry.check, kwargs={}),
+        ProjectTask(name="trivy.check", func=trivy.check, kwargs={}),
     ]
 
     runner = ProjectTaskRunner(context, tasks, skip)
