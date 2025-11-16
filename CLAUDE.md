@@ -90,6 +90,82 @@ poetry run pytest -m "not slow"
 - `make install_ci` - Install dependencies and pre-commit hooks
 - `make install_dev` - Full development setup with shell activation
 
+## Project Structure
+
+```
+.
+├── .github/                      # GitHub Actions workflows and configuration
+│   ├── workflows/
+│   │   ├── main.yml             # CI pipeline for main branch
+│   │   └── pr.yml               # CI pipeline for pull requests
+│   ├── actions/                 # Reusable GitHub Actions
+│   │   ├── ci-steps/            # Composite action for CI steps
+│   │   └── multi-python-tests/  # Composite action for multi-Python testing
+│   └── dependabot.yml           # Automated dependency updates
+├── .quality/                     # Cache and temp files for various tools
+│   ├── mypy/cache/              # MyPy cache
+│   ├── ruff/cache/              # Ruff cache
+│   └── pytest/cache/            # Pytest cache
+├── project/                      # Invoke task definitions (organized by tool)
+│   ├── project.py               # Top-level tasks (project.check, project.update)
+│   ├── project_task_runner.py   # Task runner infrastructure
+│   └── tasks/                   # Individual tool task modules
+│       ├── actionlint.py        # GitHub Actions linting tasks
+│       ├── deptry.py            # Dependency checking tasks
+│       ├── mypy.py              # Type checking tasks
+│       ├── pipaudit.py          # Security audit tasks
+│       ├── poetry.py            # Poetry management tasks
+│       ├── precommit.py         # Pre-commit hook tasks
+│       ├── ruff.py              # Linting/formatting tasks
+│       ├── testing.py           # Test execution tasks
+│       ├── vulture.py           # Dead code detection tasks
+│       └── xenon.py             # Complexity checking tasks
+├── src/lessons_learnt/           # Main package source code
+│   ├── __init__.py              # Package exports
+│   ├── example.py               # Example module
+│   └── py.typed                 # PEP 561 type hints marker
+├── tests/
+│   ├── unit/                    # Unit tests (80% coverage required)
+│   └── integration/             # Integration tests (70% coverage required)
+├── tasks.py                      # Invoke task collection entrypoint
+├── pyproject.toml               # Poetry dependencies and tool configuration
+├── Makefile                     # Common setup commands
+├── .pre-commit-config.yaml      # Pre-commit hook configuration
+├── .python-version              # Python version specification (3.13.1, 3.14.0)
+├── .unit-test-coveragerc        # Unit test coverage configuration
+├── .integration-test-coveragerc # Integration test coverage configuration
+├── vulture_whitelist            # Vulture dead code exclusions
+└── CLAUDE.md                    # This file
+```
+
+## Code Architecture
+
+### Package Organization
+
+- **Package name**: `lessons_learnt` (source in `src/lessons_learnt/`)
+- **Package mode**: Enabled with `py.typed` marker for PEP 561 compliance
+- **Module exports**: Controlled via `__init__.py` (only exports what's intended for public API)
+- **First-party detection**: Configured in deptry as `lessons_learnt`
+
+### Invoke Task Architecture
+
+The task system is organized hierarchically:
+
+1. **Root entrypoint** (`tasks.py`): Imports and registers all task collections
+2. **Project-level tasks** (`project/project.py`): Orchestrates multiple tools
+   - `project.check`: Runs all quality checks in sequence (supports `--skip` and `--apply-safe-fixes`)
+   - `project.update`: Updates all dependencies and pre-commit hooks
+3. **Tool-specific tasks** (`project/tasks/*.py`): Individual tool operations
+   - Each module exports a Collection with tool-specific tasks
+   - All `context.run()` commands use `echo=True` to display commands being executed
+4. **Task runner** (`project/project_task_runner.py`): Executes tasks with skipping support
+
+### Dependency Philosophy
+
+- **Minimal runtime dependencies**: Only `invoke` for task automation
+- **Comprehensive dev dependencies**: 17 development tools for quality, testing, and security
+- **Poetry plugin requirement**: `poetry-plugin-export` for pip-audit compatibility
+
 ## Code Quality Standards
 
 ### Linting & Formatting
@@ -110,6 +186,7 @@ poetry run pytest -m "not slow"
 - **MyPy**: Static type checker
   - Cache directory: `.quality/mypy/cache`
   - Excludes: `vulture_whitelist`, `tasks.py`
+  - Type hints required for all functions (enforced by ruff ANN rules)
 
 ### Code Quality Tools
 
@@ -147,55 +224,9 @@ poetry run pytest -m "not slow"
   - AWS credentials detection
   - Private key detection
   - Code quality checks
+  - No direct commits to main/master branches
 
 - **Pip-audit**: Vulnerability scanning for dependencies
-
-## Project Structure
-
-```
-.
-├── .github/                      # GitHub Actions workflows and configuration
-│   ├── workflows/
-│   │   ├── main.yml             # CI pipeline for main branch
-│   │   └── pr.yml               # CI pipeline for pull requests
-│   ├── actions/                 # Reusable GitHub Actions
-│   └── dependabot.yml           # Automated dependency updates
-├── .quality/                     # Cache and temp files for various tools
-│   ├── mypy/cache/              # MyPy cache
-│   ├── ruff/cache/              # Ruff cache
-│   └── pytest/cache/            # Pytest cache
-├── src/lessons_learnt/           # Main package source code
-│   ├── __init__.py              # Package exports
-│   ├── example.py               # Example module
-│   └── py.typed                 # PEP 561 type hints marker
-├── tests/
-│   ├── unit/                    # Unit tests (80% coverage required)
-│   └── integration/             # Integration tests (70% coverage required)
-├── tasks.py                      # Invoke task definitions
-├── pyproject.toml               # Poetry dependencies and tool configuration
-├── Makefile                     # Common setup commands
-├── .pre-commit-config.yaml      # Pre-commit hook configuration
-├── .python-version              # Python version specification (3.13.1, 3.14.0)
-├── .unit-test-coveragerc        # Unit test coverage configuration
-├── .integration-test-coveragerc # Integration test coverage configuration
-├── vulture_whitelist            # Vulture dead code exclusions
-└── CLAUDE.md                    # This file
-```
-
-## Code Architecture
-
-### Package Organization
-
-- **Package name**: `lessons_learnt` (source in `src/lessons_learnt/`)
-- **Package mode**: Enabled with `py.typed` marker for PEP 561 compliance
-- **Module exports**: Controlled via `__init__.py` (only exports what's intended for public API)
-- **First-party detection**: Configured in deptry as `lessons_learnt`
-
-### Dependency Philosophy
-
-- **Minimal runtime dependencies**: Only `invoke` for task automation
-- **Comprehensive dev dependencies**: 17 development tools for quality, testing, and security
-- **Poetry plugin requirement**: `poetry-plugin-export` for pip-audit compatibility
 
 ## CI/CD Pipeline
 

@@ -9,6 +9,7 @@ from project.tasks import (
     deptry,
     mypy,
     pipaudit,
+    poetry,
     precommit,
     ruff,
     testing,
@@ -23,6 +24,7 @@ ns = Collection()
 ns.add_collection(actionlint.collection)
 ns.add_collection(deptry.collection)
 ns.add_collection(mypy.collection)
+ns.add_collection(poetry.collection)
 ns.add_collection(pipaudit.collection)
 ns.add_collection(precommit.collection)
 ns.add_collection(project_tasks.collection)

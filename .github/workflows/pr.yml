@@ -12,7 +12,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Gate-keeper job: Only allow workflow to proceed if PR is from same repository (not a fork)
+  check-fork:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: PR is from same repository
+        run: echo "PR is from the same repository, proceeding with workflow"
+
   ci:
+    needs: check-fork
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,6 +32,7 @@ jobs:
         uses: ./.github/actions/ci-steps
 
   test-multi-python:
+    needs: check-fork
     name: Test Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     strategy:
