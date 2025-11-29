@@ -162,7 +162,7 @@ docstring-code-format = true
 docstring-code-line-length = "dynamic"
 
 [tool.vulture]
-exclude = [".quality",".poetry"]
+exclude = [".quality", ".poetry", ".venv"]
 ignore_decorators = [
     # pydantic
     "@model_validator",

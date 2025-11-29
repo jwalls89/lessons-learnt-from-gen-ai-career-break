@@ -8,11 +8,28 @@ This repository documents lessons learned from a career break focused on generat
 
 ## Development Setup
 
-### Prerequisites
+### DevContainer Option (Recommended)
+
+This project supports VS Code Dev Containers for a zero-configuration development experience:
+
+1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) and [VS Code Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+2. Open project in VS Code
+3. Click "Reopen in Container" when prompted
+4. Wait for build (~5 minutes first time)
+
+The devcontainer provides:
+- Python 3.13 + 3.14 (via pyenv) for tox multi-version testing
+- Poetry 2.2.1 with all dependencies pre-installed
+- Docker-in-Docker for Trivy security scanning
+- All VS Code extensions pre-configured
+- Pre-commit hooks ready to use
+
+### Manual Setup Prerequisites
 
 - Python 3.13+ (managed via pyenv, see `.python-version`)
 - Poetry 2.2.1+
-- Docker (optional - required only for `invoke trivy.check`)
+- Docker (optional - required only for `invoke trivy.check` and `invoke devcontainer.check`)
+- Node.js (optional - required only for `invoke devcontainer.check`)
 
 ### Initial Setup
 
@@ -86,6 +103,7 @@ Key tasks:
 - `invoke vulture.check` - Check for unused code
 - `invoke xenon.check` - Check code complexity
 - `invoke deptry.check` - Check for unused dependencies
+- `invoke devcontainer.check` - Verify devcontainer builds and runs in headless mode
 - `invoke actionlint.check` - Check GitHub Actions workflows
 
 ### Running Individual Tests
@@ -143,6 +161,7 @@ poetry run pytest -m "not slow"
 │   └── tasks/                   # Individual tool task modules
 │       ├── actionlint.py        # GitHub Actions linting tasks
 │       ├── deptry.py            # Dependency checking tasks
+│       ├── devcontainer.py      # Devcontainer verification tasks
 │       ├── mypy.py              # Type checking tasks
 │       ├── pipaudit.py          # Security audit tasks
 │       ├── poetry.py            # Poetry management tasks

@@ -32,9 +32,12 @@ class TestPrecommit:
 
         check(mock_context, apply_safe_fixes=True)
 
-        assert mock_context.run.call_count == 3
+        assert mock_context.run.call_count == 4
         mock_context.run.assert_any_call(
             "poetry run pre-commit run end-of-file-fixer --all-files", echo=True, warn=True
+        )
+        mock_context.run.assert_any_call(
+            "poetry run pre-commit run pretty-format-json --all-files", echo=True, warn=True
         )
         mock_context.run.assert_any_call("poetry run pre-commit run md-toc --all-files", echo=True, warn=True)
         mock_context.run.assert_any_call("poetry run pre-commit run --all-files", echo=True)

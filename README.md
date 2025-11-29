@@ -11,7 +11,8 @@
     - [MD Planning Examples](#md-planning-examples)
     - [MD Review Example](#md-review-example)
   - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
+    - [Development with DevContainer (Recommended)](#development-with-devcontainer-recommended)
+    - [Manual Setup Prerequisites](#manual-setup-prerequisites)
       - [1. Python 3.13+](#1-python-313)
       - [2. Poetry 2.2.1+](#2-poetry-221)
       - [3. Make](#3-make)
@@ -85,7 +86,29 @@ Although not explicitly mentioned in Part 2, I have used [Claude Code](https://w
 - ✅ **Fully tested:** macOS (latest), Ubuntu (latest)
 - ⚠️ **Partially supported:** Windows - Most invoke commands work, but some issues are under investigation
 
-### Prerequisites
+### Development with DevContainer (Recommended)
+
+The easiest way to set up a development environment is using VS Code Dev Containers:
+
+**Prerequisites:**
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Windows/macOS) or Docker CE (Linux)
+- [VS Code](https://code.visualstudio.com/) with [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+**Setup:**
+1. Clone the repository
+2. Open the folder in VS Code
+3. When prompted, click "Reopen in Container"
+4. Wait for the container to build (first time takes ~5 minutes)
+5. Start developing!
+
+The devcontainer includes:
+- Python 3.13.1 and 3.14.0 (via pyenv)
+- Poetry 2.2.1 with all dependencies
+- Docker-in-Docker for Trivy security scanning
+- Pre-configured VS Code extensions
+- Pre-commit hooks installed
+
+### Manual Setup Prerequisites
 
 Before you can run this repository locally, you'll need to install the following software:
 

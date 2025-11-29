@@ -6,6 +6,7 @@ from invoke.collection import Collection
 from project import project as project_tasks
 from project.tasks import (
     deptry,
+    devcontainer,
     mypy,
     pipaudit,
     poetry,
@@ -22,6 +23,7 @@ ns = Collection()
 
 # Register all collections
 ns.add_collection(deptry.collection)
+ns.add_collection(devcontainer.collection)
 ns.add_collection(mypy.collection)
 ns.add_collection(poetry.collection)
 ns.add_collection(pipaudit.collection)
