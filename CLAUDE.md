@@ -16,11 +16,13 @@ This project supports VS Code Dev Containers for a zero-configuration developmen
 2. Open project in VS Code
 3. Click "Reopen in Container" when prompted
 4. Wait for build (~5 minutes first time)
+5. Run `gh auth login` to authenticate with GitHub
 
 The devcontainer provides:
 - Python 3.13 + 3.14 (via pyenv) for tox multi-version testing
 - Poetry 2.2.1 with all dependencies pre-installed
 - Docker-in-Docker for Trivy security scanning
+- GitHub CLI for Git authentication (`gh auth login`)
 - All VS Code extensions pre-configured
 - Pre-commit hooks ready to use
 

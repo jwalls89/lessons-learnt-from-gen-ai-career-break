@@ -101,12 +101,22 @@ The easiest way to set up a development environment is using VS Code Dev Contain
 2. Open the folder in VS Code
 3. When prompted, click "Reopen in Container"
 4. Wait for the container to build (first time takes ~5 minutes)
-5. Start developing!
+5. Authenticate with GitHub: `gh auth login`
+6. Start developing!
+
+**Git Authentication:**
+
+The devcontainer includes GitHub CLI for Git authentication. After the container builds, run:
+```bash
+gh auth login
+```
+Follow the prompts to authenticate via browser. This enables `git push`, `git pull`, and GitHub API access.
 
 The devcontainer includes:
 - Python 3.13.1 and 3.14.0 (via pyenv)
 - Poetry 2.2.1 with all dependencies
 - Docker-in-Docker for Trivy security scanning
+- GitHub CLI for authentication
 - Pre-configured VS Code extensions
 - Pre-commit hooks installed
 
