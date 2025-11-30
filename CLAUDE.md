@@ -104,7 +104,8 @@ Key tasks:
 - `invoke xenon.check` - Check code complexity
 - `invoke deptry.check` - Check for unused dependencies
 - `invoke devcontainer.check` - Verify devcontainer builds and runs in headless mode
-- `invoke actionlint.check` - Check GitHub Actions workflows
+  - `--build-only`: Only build the image (fast check)
+  - `--run-project-check`: Run full `invoke project.check` inside container
 
 ### Running Individual Tests
 
@@ -147,6 +148,7 @@ poetry run pytest -m "not slow"
 │   │   └── pr.yml               # CI pipeline for pull requests
 │   ├── actions/                 # Reusable GitHub Actions
 │   │   ├── ci-steps/            # Composite action for CI steps
+│   │   ├── devcontainer-check/  # Composite action for devcontainer verification
 │   │   └── multi-python-tests/  # Composite action for multi-Python testing
 │   └── dependabot.yml           # Automated dependency updates
 ├── .quality/                     # Cache and temp files for various tools
@@ -318,10 +320,16 @@ The project is designed to work on **Windows**, **macOS**, and **Linux** without
   - Same test matrix as main branch (3 OS × 2 Python versions = 6 combinations)
   - Concurrent runs with cancellation of in-progress jobs
   - Includes PR write permissions for comments
+  - Devcontainer check with path-based triggering (full check only when relevant files change)
+
+- **devcontainer-weekly.yml**: Scheduled weekly (Sundays 6am UTC)
+  - Full devcontainer verification to catch external drift (base image updates, dependency changes)
+  - Can be manually triggered via workflow_dispatch
 
 ### Composite Actions
 
 - **ci-steps**: Runs actionlint, Python setup, poetry install, and `invoke project.check`
+- **devcontainer-check**: Builds and verifies devcontainer (supports quick build-only or full verification)
 - **multi-python-tests**: Runs unit and integration tests on specified Python version
 
 ### Dependabot
@@ -344,7 +352,7 @@ The project is designed to work on **Windows**, **macOS**, and **Linux** without
 - **All `context.run()` commands in tasks use `echo=True`** to display commands being executed
 - **Socket access is disabled in tests** to prevent accidental network calls
 - **Poetry checks are temporarily disabled** in pre-commit due to GitHub Actions v2.2.1 compatibility
-- **Actionlint check exists** but not yet integrated into main CI workflow
+- **Actionlint runs via pre-commit** and CI composite action (not as an invoke task)
 - **Type hints are required** for all functions (enforced by ruff ANN rules)
 - **Line length is 120 characters** (different from common 88/100 defaults)
 - **CI/CD tests on 3 platforms**: ubuntu-latest, windows-latest, macos-latest

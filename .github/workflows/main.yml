@@ -33,3 +33,14 @@ jobs:
         uses: ./.github/actions/multi-python-tests
         with:
           python-version: ${{ matrix.python-version }}
+
+  devcontainer-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Run devcontainer check
+        uses: ./.github/actions/devcontainer-check
+        with:
+          full-check: 'true'

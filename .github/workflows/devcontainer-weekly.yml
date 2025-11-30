@@ -1,0 +1,18 @@
+name: Weekly Devcontainer Check
+
+on:
+  schedule:
+    - cron: '0 6 * * 0'  # Sunday at 6am UTC
+  workflow_dispatch:      # Manual trigger
+
+jobs:
+  devcontainer-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Run full devcontainer check
+        uses: ./.github/actions/devcontainer-check
+        with:
+          full-check: 'true'

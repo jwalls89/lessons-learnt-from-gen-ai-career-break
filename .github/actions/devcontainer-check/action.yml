@@ -1,0 +1,27 @@
+name: 'Devcontainer Check'
+description: 'Build and verify the devcontainer works correctly'
+
+inputs:
+  full-check:
+    description: 'Run full verification (true) or quick build only (false)'
+    required: false
+    default: 'false'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 'lts/*'
+
+    - name: Quick build check
+      if: inputs.full-check == 'false'
+      shell: bash
+      run: npx @devcontainers/cli build --workspace-folder .
+
+    - name: Full devcontainer verification
+      if: inputs.full-check == 'true'
+      uses: devcontainers/ci@v0.3
+      with:
+        runCmd: poetry run invoke project.check
