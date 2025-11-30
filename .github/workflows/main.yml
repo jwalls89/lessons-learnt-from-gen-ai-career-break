@@ -20,11 +20,10 @@ jobs:
         uses: ./.github/actions/ci-steps
 
   test-multi-python:
-    name: Test Python ${{ matrix.python-version }} on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: Test Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
         python-version: ["3.13", "3.14"]
     steps:
       - name: Checkout

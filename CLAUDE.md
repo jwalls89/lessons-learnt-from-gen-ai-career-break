@@ -218,7 +218,7 @@ The task system is organized hierarchically:
 
 ### Cross-Platform Compatibility
 
-The project is designed to work on **Windows**, **macOS**, and **Linux** without modification:
+The project codebase uses cross-platform compatible code patterns, though CI testing is performed on Ubuntu only. Users on other platforms should use the DevContainer for development.
 
 - **No shell-specific commands**: All tasks use Python's `pathlib` and standard library instead of bash/shell commands
 - **Path handling**: Uses `Path` objects that automatically handle OS-specific path separators
@@ -312,12 +312,11 @@ The project is designed to work on **Windows**, **macOS**, and **Linux** without
 
 - **main.yml**: Runs on push to main branch
   - Executes all CI steps via composite action
-  - Runs unit and integration tests on Python 3.13
-  - Tests on `ubuntu-latest`, `windows-latest`, and `macos-latest`
-  - Python 3.14 support pending GitHub Actions update
+  - Runs unit and integration tests on Python 3.13 and 3.14
+  - Tests on `ubuntu-latest` only
 
 - **pr.yml**: Runs on all pull requests
-  - Same test matrix as main branch (3 OS × 2 Python versions = 6 combinations)
+  - Same test matrix as main branch (2 Python versions on Ubuntu)
   - Concurrent runs with cancellation of in-progress jobs
   - Includes PR write permissions for comments
   - Devcontainer check with path-based triggering (full check only when relevant files change)
@@ -355,4 +354,4 @@ The project is designed to work on **Windows**, **macOS**, and **Linux** without
 - **Actionlint runs via pre-commit** and CI composite action (not as an invoke task)
 - **Type hints are required** for all functions (enforced by ruff ANN rules)
 - **Line length is 120 characters** (different from common 88/100 defaults)
-- **CI/CD tests on 3 platforms**: ubuntu-latest, windows-latest, macos-latest
+- **CI/CD tests on Ubuntu only**: Use DevContainer for development on other platforms

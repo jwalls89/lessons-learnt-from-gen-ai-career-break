@@ -83,10 +83,12 @@ Although not explicitly mentioned in Part 2, I have used [Claude Code](https://w
 ## Getting Started
 
 **Platform Support:**
-- ✅ **Fully tested:** macOS (latest), Ubuntu (latest)
-- ⚠️ **Partially supported:** Windows - Most invoke commands work, but some issues are under investigation
+- ✅ **Supported:** Ubuntu (via CI) or DevContainer (any OS with Docker)
+- ⚠️ **Not tested:** Windows and macOS native installations - use the DevContainer instead
 
 ### Development with DevContainer (Recommended)
+
+> **Note:** The DevContainer is the recommended development environment for all platforms (Windows, macOS, Linux). It provides a consistent, pre-configured Ubuntu environment with all dependencies installed.
 
 The easiest way to set up a development environment is using VS Code Dev Containers:
 
@@ -109,6 +111,8 @@ The devcontainer includes:
 - Pre-commit hooks installed
 
 ### Manual Setup Prerequisites
+
+> **Important:** Manual setup is only tested on Ubuntu. For Windows and macOS users, we strongly recommend using the DevContainer instead for a consistent development experience.
 
 Before you can run this repository locally, you'll need to install the following software:
 
@@ -158,7 +162,7 @@ The Makefile provides convenient commands for setup. Make is typically pre-insta
 
 - **macOS:** Included with Xcode Command Line Tools (`xcode-select --install`)
 - **Linux:** Usually pre-installed, or install via package manager (`apt install build-essential` or `yum install make`)
-- **Windows:** Install via [chocolatey](https://chocolatey.org/) (`choco install make`) or use [WSL](https://learn.microsoft.com/en-us/windows/wsl/)
+- **Windows:** Use the DevContainer (recommended) or [WSL](https://learn.microsoft.com/en-us/windows/wsl/) with Ubuntu
 
 #### 4. Docker (Optional - for Trivy security scanning)
 
