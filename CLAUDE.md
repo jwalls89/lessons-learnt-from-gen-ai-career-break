@@ -327,6 +327,14 @@ The project codebase uses cross-platform compatible code patterns, though CI tes
   - Full devcontainer verification to catch external drift (base image updates, dependency changes)
   - Can be manually triggered via workflow_dispatch
 
+- **claude.yml**: Claude Code GitHub integration
+  - Responds to `@claude` mentions in issue comments, PR review comments, and issues
+  - Requires `CLAUDE_CODE_OAUTH_TOKEN` secret
+
+- **claude-code-review.yml**: Automatic Claude Code review on PRs
+  - Triggers on PR open, synchronize, ready_for_review, and reopened events
+  - Uses the `code-review` plugin from Claude Code plugins marketplace
+
 ### Composite Actions
 
 - **ci-steps**: Runs actionlint, Python setup, poetry install, and `invoke project.check`
