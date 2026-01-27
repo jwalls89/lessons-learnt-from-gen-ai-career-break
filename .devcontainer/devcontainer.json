@@ -1,0 +1,60 @@
+{
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "ms-python.vscode-python-envs",
+        "charliermarsh.ruff",
+        "ms-vscode.makefile-tools",
+        "redhat.vscode-yaml",
+        "github.vscode-github-actions",
+        "anthropic.claude-code",
+        "github.copilot",
+        "github.copilot-chat",
+        "amazonwebservices.amazon-q-vscode",
+        "amazonwebservices.aws-toolkit-vscode",
+        "boto3typed.boto3-ide",
+        "vstirbu.vscode-mermaid-preview"
+      ],
+      "settings": {
+        "[python]": {
+          "editor.codeActionsOnSave": {
+            "source.fixAll.ruff": "explicit",
+            "source.organizeImports.ruff": "explicit"
+          },
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.formatOnSave": true
+        },
+        "files.exclude": {
+          "**/.mypy_cache": true,
+          "**/.pytest_cache": true,
+          "**/.ruff_cache": true,
+          "**/__pycache__": true,
+          ".quality": true
+        },
+        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+        "python.terminal.activateEnvironment": true,
+        "ruff.configuration": "${workspaceFolder}/pyproject.toml",
+        "ruff.lineLength": 120
+      }
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "dockerDashComposeVersion": "v2",
+      "moby": true
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    }
+  },
+  "name": "lessons-learnt-from-gen-ai-career-break",
+  "postCreateCommand": "bash .devcontainer/scripts/post-create.sh",
+  "remoteUser": "vscode"
+}

@@ -8,11 +8,30 @@ This repository documents lessons learned from a career break focused on generat
 
 ## Development Setup
 
-### Prerequisites
+### DevContainer Option (Recommended)
+
+This project supports VS Code Dev Containers for a zero-configuration development experience:
+
+1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) and [VS Code Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+2. Open project in VS Code
+3. Click "Reopen in Container" when prompted
+4. Wait for build (~5 minutes first time)
+5. Run `gh auth login` to authenticate with GitHub
+
+The devcontainer provides:
+- Python 3.13 + 3.14 (via pyenv) for tox multi-version testing
+- Poetry 2.2.1 with all dependencies pre-installed
+- Docker-in-Docker for Trivy security scanning
+- GitHub CLI for Git authentication (`gh auth login`)
+- All VS Code extensions pre-configured
+- Pre-commit hooks ready to use
+
+### Manual Setup Prerequisites
 
 - Python 3.13+ (managed via pyenv, see `.python-version`)
 - Poetry 2.2.1+
-- Docker (optional - required only for `invoke trivy.check`)
+- Docker (optional - required only for `invoke trivy.check` and `invoke devcontainer.check`)
+- Node.js (optional - required only for `invoke devcontainer.check`)
 
 ### Initial Setup
 
@@ -86,7 +105,9 @@ Key tasks:
 - `invoke vulture.check` - Check for unused code
 - `invoke xenon.check` - Check code complexity
 - `invoke deptry.check` - Check for unused dependencies
-- `invoke actionlint.check` - Check GitHub Actions workflows
+- `invoke devcontainer.check` - Verify devcontainer builds and runs in headless mode
+  - `--build-only`: Only build the image (fast check)
+  - `--run-project-check`: Run full `invoke project.check` inside container
 
 ### Running Individual Tests
 
@@ -129,6 +150,7 @@ poetry run pytest -m "not slow"
 │   │   └── pr.yml               # CI pipeline for pull requests
 │   ├── actions/                 # Reusable GitHub Actions
 │   │   ├── ci-steps/            # Composite action for CI steps
+│   │   ├── devcontainer-check/  # Composite action for devcontainer verification
 │   │   └── multi-python-tests/  # Composite action for multi-Python testing
 │   └── dependabot.yml           # Automated dependency updates
 ├── .quality/                     # Cache and temp files for various tools
@@ -143,6 +165,7 @@ poetry run pytest -m "not slow"
 │   └── tasks/                   # Individual tool task modules
 │       ├── actionlint.py        # GitHub Actions linting tasks
 │       ├── deptry.py            # Dependency checking tasks
+│       ├── devcontainer.py      # Devcontainer verification tasks
 │       ├── mypy.py              # Type checking tasks
 │       ├── pipaudit.py          # Security audit tasks
 │       ├── poetry.py            # Poetry management tasks
@@ -197,7 +220,7 @@ The task system is organized hierarchically:
 
 ### Cross-Platform Compatibility
 
-The project is designed to work on **Windows**, **macOS**, and **Linux** without modification:
+The project codebase uses cross-platform compatible code patterns, though CI testing is performed on Ubuntu only. Users on other platforms should use the DevContainer for development.
 
 - **No shell-specific commands**: All tasks use Python's `pathlib` and standard library instead of bash/shell commands
 - **Path handling**: Uses `Path` objects that automatically handle OS-specific path separators
@@ -291,18 +314,31 @@ The project is designed to work on **Windows**, **macOS**, and **Linux** without
 
 - **main.yml**: Runs on push to main branch
   - Executes all CI steps via composite action
-  - Runs unit and integration tests on Python 3.13
-  - Tests on `ubuntu-latest`, `windows-latest`, and `macos-latest`
-  - Python 3.14 support pending GitHub Actions update
+  - Runs unit and integration tests on Python 3.13 and 3.14
+  - Tests on `ubuntu-latest` only
 
 - **pr.yml**: Runs on all pull requests
-  - Same test matrix as main branch (3 OS × 2 Python versions = 6 combinations)
+  - Same test matrix as main branch (2 Python versions on Ubuntu)
   - Concurrent runs with cancellation of in-progress jobs
   - Includes PR write permissions for comments
+  - Devcontainer check with path-based triggering (full check only when relevant files change)
+
+- **devcontainer-weekly.yml**: Scheduled weekly (Sundays 6am UTC)
+  - Full devcontainer verification to catch external drift (base image updates, dependency changes)
+  - Can be manually triggered via workflow_dispatch
+
+- **claude.yml**: Claude Code GitHub integration
+  - Responds to `@claude` mentions in issue comments, PR review comments, and issues
+  - Requires `CLAUDE_CODE_OAUTH_TOKEN` secret
+
+- **claude-code-review.yml**: Automatic Claude Code review on PRs
+  - Triggers on PR open, synchronize, ready_for_review, and reopened events
+  - Uses the `code-review` plugin from Claude Code plugins marketplace
 
 ### Composite Actions
 
 - **ci-steps**: Runs actionlint, Python setup, poetry install, and `invoke project.check`
+- **devcontainer-check**: Builds and verifies devcontainer (supports quick build-only or full verification)
 - **multi-python-tests**: Runs unit and integration tests on specified Python version
 
 ### Dependabot
@@ -325,7 +361,7 @@ The project is designed to work on **Windows**, **macOS**, and **Linux** without
 - **All `context.run()` commands in tasks use `echo=True`** to display commands being executed
 - **Socket access is disabled in tests** to prevent accidental network calls
 - **Poetry checks are temporarily disabled** in pre-commit due to GitHub Actions v2.2.1 compatibility
-- **Actionlint check exists** but not yet integrated into main CI workflow
+- **Actionlint runs via pre-commit** and CI composite action (not as an invoke task)
 - **Type hints are required** for all functions (enforced by ruff ANN rules)
 - **Line length is 120 characters** (different from common 88/100 defaults)
-- **CI/CD tests on 3 platforms**: ubuntu-latest, windows-latest, macos-latest
+- **CI/CD tests on Ubuntu only**: Use DevContainer for development on other platforms

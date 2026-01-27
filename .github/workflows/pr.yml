@@ -33,11 +33,10 @@ jobs:
 
   test-multi-python:
     needs: check-fork
-    name: Test Python ${{ matrix.python-version }} on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: Test Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
         python-version: ["3.13", "3.14"]
     steps:
       - name: Checkout
@@ -46,3 +45,27 @@ jobs:
         uses: ./.github/actions/multi-python-tests
         with:
           python-version: ${{ matrix.python-version }}
+
+  devcontainer-check:
+    needs: check-fork
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Check for relevant changes
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            fullcheck:
+              - '.devcontainer/**'
+              - 'pyproject.toml'
+              - 'poetry.lock'
+              - 'project/**'
+              - 'tasks.py'
+
+      - name: Run devcontainer check
+        uses: ./.github/actions/devcontainer-check
+        with:
+          full-check: ${{ steps.changes.outputs.fullcheck }}
